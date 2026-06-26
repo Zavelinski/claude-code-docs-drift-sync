@@ -9,6 +9,46 @@ A [Claude Code](https://claude.com/claude-code) skill that **keeps docs in sync 
 
 It is drift detection + surgical fix — **not** a doc generator. It does not rewrite sections that didn't drift.
 
+## Prerequisites
+
+Claude Code with `/plugin` support (v2.x+) and a shell if you use the manual fallback.
+
+## Install
+
+### Option 1 — Claude Code plugin marketplace (recommended)
+
+```bash
+/plugin marketplace add Zavelinski/claude-code-skills
+/plugin install docs-drift-sync@claude-code-skills
+```
+
+Registered hooks (if any) install through the Claude Code consent UI, with no manual edit to `~/.claude/settings.json`.
+
+### Option 2 — Manual fallback (run it yourself)
+
+> **Security note.** This script mutates `~/.claude/settings.json` directly. Claude Code auto-mode blocks it because a third-party `UserPromptSubmit` hook that injects text into every prompt is a known risk vector. The script is benign and local-only (no network), but you must review and run it yourself. Prefer Option 1.
+
+```bash
+git clone https://github.com/Zavelinski/claude-code-docs-drift-sync.git
+cd claude-code-docs-drift-sync
+bash install.sh        # macOS / Linux
+.\install.ps1          # Windows (PowerShell)
+```
+
+## Uninstall
+
+```bash
+/plugin uninstall docs-drift-sync@claude-code-skills    # Option 1
+bash uninstall.sh                                # Option 2 (or uninstall.ps1 on Windows)
+```
+
+## Update
+
+```bash
+/plugin marketplace update claude-code-skills    # Option 1
+# Option 2: pull the latest commit and re-run the manual fallback.
+```
+
 ## What counts as drift
 
 - a renamed/removed symbol, flag, env var, config key, or CLI option still referenced in docs,
@@ -31,47 +71,6 @@ It is drift detection + surgical fix — **not** a doc generator. It does not re
 - Code is the source of truth for behavior; docs change to match, never the reverse.
 - Every proposed edit traces to something the diff changed.
 
-## Install
-
-```bash
-git clone https://github.com/Zavelinski/claude-code-docs-drift-sync.git
-cd docs-drift-sync
-```
-
-**macOS / Linux**
-```bash
-bash install.sh
-```
-
-**Windows (PowerShell)**
-```powershell
-.\install.ps1
-```
-
-Skill-only install (no hooks, no `settings.json` changes). Restart Claude Code, then ask **"are the docs still correct?"** (or `/docs-drift-sync`).
-
-> For continuous sync you can wire this skill to a pre-commit or post-edit hook yourself. The repo ships the skill only, so the install stays simple and no-config.
-
-## Uninstall
-
-```bash
-bash uninstall.sh      # macOS / Linux
-```
-```powershell
-.\uninstall.ps1        # Windows
-```
-
 ## License
 
 MIT. See [LICENSE](LICENSE). Original work.
-
----
-
-## Install as a Claude Code plugin
-
-```bash
-/plugin marketplace add Zavelinski/claude-code-skills
-/plugin install docs-drift-sync@claude-code-skills
-```
-
-Part of the **[claude-code-skills](https://github.com/Zavelinski/claude-code-skills)** collection: a suite of focused, original Claude Code skills.
